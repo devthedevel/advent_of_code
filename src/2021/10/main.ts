@@ -1,54 +1,69 @@
-import { parseInput } from "../..";
+/**
+ * @see https://adventofcode.com/2021/day/10
+ * 
+ * 1. What is the total syntax error score for those errors?
+ * 2. What is the middle score?
+ */
+
+import { parseInput } from '../..';
 import { Stack } from '../../stack';
+
+enum Openers {
+    CIRCLE = '(',
+    SQUARE = '[',
+    CURLY = '{',
+    ANGLE = '<'    
+}
+
+enum Closers {
+    CIRCLE = ')',
+    SQUARE = ']',
+    CURLY = '}',
+    ANGLE = '>'
+}
 
 async function part1(file: string) {
     const input = await parseInput(file, null, line => line.split(''));
 
     const illegal = [];
 
+    outer:
     for (let line of input) {
         const stack = new Stack();
 
-        let foundIllegal = false;
-
         for (let char of line) {
             // Opening chunks
-            if (char === '(' || char === '[' || char === '{' || char === '<') {
+            if (char === Openers.CIRCLE || 
+                char === Openers.SQUARE || 
+                char === Openers.CURLY || 
+                char === Openers.ANGLE) {
                 stack.push(char);
 
             // Closing chunks
             } else {
                 const last = stack.pop();
 
-                if (last === '(' && char !== ')' ||
-                    last === '[' && char !== ']' ||
-                    last === '{' && char !== '}' ||
-                    last === '<' && char !== '>') {
+                if (last === Openers.CIRCLE && char !== Closers.CIRCLE ||
+                    last === Openers.SQUARE && char !== Closers.SQUARE ||
+                    last === Openers.CURLY && char !== Closers.CURLY ||
+                    last === Openers.ANGLE && char !== Closers.ANGLE) {
                         illegal.push(char);
-                        foundIllegal = true;
-                        break;
+                        break outer;
                 }
             }
         }
-
-        // If an illegal character was found, skip the rest of line
-        if (foundIllegal) {
-            continue;
-        }
     }
+
+    const scoreMap = { };
+    scoreMap[Closers.CIRCLE] = 3;
+    scoreMap[Closers.SQUARE] = 57;
+    scoreMap[Closers.CURLY] = 1197;
+    scoreMap[Closers.ANGLE] = 25137;
 
     let score = 0;
 
-    for (let i of illegal) {
-        if (i === ')') {
-            score += 3;
-        } else if (i === ']') {
-            score += 57;
-        } else if (i === '}') {
-            score += 1197;
-        } else if (i === '>') {
-            score += 25137;
-        }
+    for (let char of illegal) {
+        score += scoreMap[char];
     }
 
     console.log(`Score is ${score}`);
@@ -59,33 +74,29 @@ async function part2(file: string) {
 
     const incompletes = [];
 
+    outer:
     for (let line of input) {
         const stack = new Stack();
 
-        let foundIllegal = false;
-
         for (let char of line) {
             // Opening chunks
-            if (char === '(' || char === '[' || char === '{' || char === '<') {
+            if (char === Openers.CIRCLE || 
+                char === Openers.SQUARE || 
+                char === Openers.CURLY || 
+                char === Openers.ANGLE) {
                 stack.push(char);
 
             // Closing chunks
             } else {
                 const last = stack.pop();
 
-                if (last === '(' && char !== ')' ||
-                    last === '[' && char !== ']' ||
-                    last === '{' && char !== '}' ||
-                    last === '<' && char !== '>') {
-                        foundIllegal = true;
-                        break;
+                if (last === Openers.CIRCLE && char !== Closers.CIRCLE ||
+                    last === Openers.SQUARE && char !== Closers.SQUARE ||
+                    last === Openers.CURLY && char !== Closers.CURLY ||
+                    last === Openers.ANGLE && char !== Closers.ANGLE) {
+                        break outer;
                 }
             }
-        }
-
-        // If an illegal character was found, skip the rest of line
-        if (foundIllegal) {
-            continue;
         }
 
         // If an incomplete line is found, autocomplete it
@@ -95,14 +106,14 @@ async function part2(file: string) {
             while (!stack.isEmpty()) {
                 const last = stack.pop();
 
-                if (last === '(') {
-                    autocomplete.push(')');
-                } else if (last === '[') {
-                    autocomplete.push(']');
-                } else if (last === '{') {
-                    autocomplete.push('}');
-                } else if (last === '<') {
-                    autocomplete.push('>');
+                if (last === Openers.CIRCLE) {
+                    autocomplete.push(Closers.CIRCLE);
+                } else if (last === Openers.SQUARE) {
+                    autocomplete.push(Closers.SQUARE);
+                } else if (last === Openers.CURLY) {
+                    autocomplete.push(Closers.CURLY);
+                } else if (last === Openers.ANGLE) {
+                    autocomplete.push(Closers.ANGLE);
                 }
             }
 
@@ -110,21 +121,19 @@ async function part2(file: string) {
         }
     }
 
+    const scoreMap = { };
+    scoreMap[Closers.CIRCLE] = 1;
+    scoreMap[Closers.SQUARE] = 2;
+    scoreMap[Closers.CURLY] = 3;
+    scoreMap[Closers.ANGLE] = 4;
+
     const scores = incompletes.map(arr => {
         let score = 0;
 
         for (let char of arr) {
             score *= 5;
 
-            if (char === ')') {
-                score += 1;
-            } else if (char === ']') {
-                score += 2;
-            } else if (char === '}') {
-                score += 3;
-            } else if (char === '>') {
-                score += 4;
-            }
+            score += scoreMap[char];
         }
 
         return score;
