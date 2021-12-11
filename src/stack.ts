@@ -20,4 +20,18 @@ export class Stack<T> {
     isEmpty(): boolean {
         return this.arr.length === 0;
     }
+
+    contains(obj: T, fn: (a: T, b: T) => boolean): boolean {
+        let found = false;
+
+        for (let item of this.arr) {
+            found = fn(item, obj);
+
+            if (found) {
+                return true;
+            }
+        }
+
+        return found;
+    }
 }
