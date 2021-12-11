@@ -7,7 +7,7 @@
         "inlineSources": true,
         "inlineSourceMap": true,
         "outDir": "./dist",
-        
+        "experimentalDecorators": true
     },
     "ts-node": {
         "compilerOptions": {
