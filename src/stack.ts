@@ -1,4 +1,6 @@
-export class Stack<T> {
+import { Comparable } from './comparable';
+
+export class Stack<T extends Comparable> {
     private readonly arr: T[];
 
     constructor() {
@@ -21,17 +23,13 @@ export class Stack<T> {
         return this.arr.length === 0;
     }
 
-    contains(obj: T, fn: (a: T, b: T) => boolean): boolean {
-        let found = false;
-
+    contains(obj: T): boolean {
         for (let item of this.arr) {
-            found = fn(item, obj);
-
-            if (found) {
+            if (item.isEqual(obj)) {
                 return true;
             }
         }
 
-        return found;
+        return false;
     }
 }

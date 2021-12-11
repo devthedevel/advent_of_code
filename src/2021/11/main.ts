@@ -1,18 +1,22 @@
 import { Stack } from '../../stack.js';
 import { Day, Input } from '../../day.js';
 import { Advent, Timed } from '../../decorators.js';
+import { Comparable } from '../../comparable.js';
 
 interface Octopus {
     energy: number;
     flashed: boolean;
 }
 
-interface Position {
-    row: number;
-    col: number;
+class Position implements Comparable {
+    constructor(readonly row: number, readonly col: number) { }
+
+    isEqual(other: Position) {
+        return this.row === other.row && this.col === other.col;
+    }
 }
 
-@Advent(2021, 11, true)
+@Advent(2021, 11, false)
 class Day11 extends Day<Octopus> {
 
     ENERGY_LEVEL = 9;
@@ -74,16 +78,16 @@ class Day11 extends Day<Octopus> {
     
                 // Add octopus if ready to flash
                 if (octopus.energy > this.ENERGY_LEVEL) {
-                    stack.push({ row, col });
+                    stack.push(new Position(row, col));
                 }
             }
         }
     
         // For every octopus in the stack, flash
         while (!stack.isEmpty()) {
-            const { row, col } = stack.pop();
+            const pos = stack.pop();
     
-            const octopus = input[row][col];
+            const octopus = input[pos.row][pos.col];
     
             // Reset
             octopus.energy = 0;
@@ -92,10 +96,10 @@ class Day11 extends Day<Octopus> {
             numFlashes++;
     
             // Check neighbours
-            for (let i = row-1; i <= row+1; i++) {
-                for (let j = col-1; j <= col+1; j++) {
+            for (let i = pos.row - 1; i <= pos.row + 1; i++) {
+                for (let j = pos.col - 1; j <= pos.col + 1; j++) {
                     // Skip current octopus
-                    if (i === row && j === col) {
+                    if (i === pos.row && j === pos.col) {
                         continue;
                     }
     
@@ -105,11 +109,11 @@ class Day11 extends Day<Octopus> {
                     if (!neighbour) {
                         continue;
                     }
+
+                    const curPos = new Position(i, j);
     
                     // If neighbour is already in stack, skip
-                    if (stack.contains({ row: i, col: j}, (a, b) => {
-                        return a.row === b.row && a.col === b.col;
-                    })) {
+                    if (stack.contains(curPos)) {
                         continue;
                     }
     
@@ -118,10 +122,7 @@ class Day11 extends Day<Octopus> {
                         neighbour.energy++;
     
                         if (neighbour.energy > this.ENERGY_LEVEL) {
-                            stack.push({
-                                row: i,
-                                col: j
-                            });
+                            stack.push(curPos);
                         }
                     }
                 }
