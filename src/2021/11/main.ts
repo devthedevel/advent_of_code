@@ -1,7 +1,7 @@
-import { Stack } from '../../stack.js';
-import { Day, Input } from '../../day.js';
-import { Advent, Timed } from '../../decorators.js';
-import { Comparable } from '../../comparable.js';
+import { Stack } from '../../stack';
+import { Day, Input } from '../../day';
+import { Advent, Timed } from '../../decorators';
+import { Comparable } from '../../comparable';
 
 interface Octopus {
     energy: number;
