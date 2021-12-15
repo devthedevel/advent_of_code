@@ -1,5 +1,5 @@
 import { Stack } from '../../stack';
-import { Day, Input } from '../../day';
+import { Day } from '../../day';
 import { Advent, Timed } from '../../decorators';
 import { Comparable } from '../../comparable';
 
@@ -16,13 +16,15 @@ class Position implements Comparable {
     }
 }
 
+type Input = Octopus[][];
+
 @Advent(2021, 11, false)
-class Day11 extends Day<Octopus> {
+class Day11 extends Day<Input> {
 
     ENERGY_LEVEL = 9;
 
     @Timed
-    transform(data: string[]) {
+    transform(data: string[]): Input {
         return data.map(line => {
             return line.split('').map(item => {
                 return {
@@ -34,7 +36,7 @@ class Day11 extends Day<Octopus> {
     }
 
     @Timed
-    one(input: Input<Octopus>) {
+    one(input: Input) {
         let numFlashes = 0;
 
         const steps = 100;
@@ -47,7 +49,7 @@ class Day11 extends Day<Octopus> {
     }
 
     @Timed
-    two(input: Input<Octopus>) {
+    two(input: Input) {
         let firstSyncStep = 0;
         let step = 0;
     
@@ -63,7 +65,7 @@ class Day11 extends Day<Octopus> {
         console.log(`First sync step is ${firstSyncStep + 1}`);
     }
 
-    flash(input: Input<Octopus>): number {
+    flash(input: Input): number {
         let numFlashes = 0;
     
         const stack = new Stack<Position>();

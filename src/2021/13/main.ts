@@ -25,7 +25,6 @@ interface Input {
 class Day13 extends Day<Input> {
 
     @Timed
-    //@ts-ignore
     transform(data: string[]) {
         const input: Input = {
             dots: [],
@@ -60,7 +59,6 @@ class Day13 extends Day<Input> {
     }
 
     @Timed
-    //@ts-ignore
     one(input: Input) {
         const dots = new Map<string, Position>();
 

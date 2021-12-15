@@ -1,4 +1,4 @@
-import { Input, Day } from '../../day';
+import { Day } from '../../day';
 import { Advent, Timed } from '../../decorators';
 
 interface Cave {
@@ -11,11 +11,13 @@ interface Path {
     end: string;
 }
 
+type Input = Path[];
+
 @Advent(2021, 12, false)
-class Day12 extends Day<Path> {
+class Day12 extends Day<Input> {
 
     @Timed
-    transform(data: string[]): Input<Path> {
+    transform(data: string[]): Input {
         return data.map(line => {
             const arr = line.split('-');
             
@@ -27,7 +29,7 @@ class Day12 extends Day<Path> {
     }
 
     @Timed
-    one(input: Input<Path>) {
+    one(input: Input) {
         const graph = new Graph<Cave>();
 
         for (let path of input) {
@@ -49,7 +51,7 @@ class Day12 extends Day<Path> {
     }
 
     @Timed
-    two(input: Input<Path>) {
+    two(input: Input) {
         const graph = new Graph<Cave>();
 
         for (let path of input) {
