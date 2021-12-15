@@ -2,8 +2,6 @@ import { readFile } from 'fs';
 import { StringDecoder } from 'string_decoder';
 import { EOL } from 'os';
 
-export type Input<T> = T[];
-
 export abstract class Day<T> {
     constructor() {
         // @ts-ignore
@@ -13,7 +11,7 @@ export abstract class Day<T> {
             }
 
             const decoder = new StringDecoder();
-            const input = this.transform(decoder.write(data).split(EOL)) as Input<T>;
+            const input = this.transform(decoder.write(data).split(EOL)) as T;
 
             this.one(input);
             this.two(input);
@@ -21,9 +19,9 @@ export abstract class Day<T> {
 
     }
 
-    abstract transform(data: string[]): Input<T>;
+    abstract transform(data: string[]): T;
 
-    abstract one(input: Input<T>);
+    abstract one(input: T);
 
-    abstract two(input: Input<T>);
+    abstract two(input: T);
 }
