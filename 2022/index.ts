@@ -1,4 +1,5 @@
 import { Command, colors } from 'https://deno.land/x/cliffy@v0.25.4/mod.ts';
+import { EOL } from "https://deno.land/std@0.166.0/node/os.ts";
 
 interface Options {
     exclude: 1 | 2;
@@ -7,7 +8,7 @@ interface Options {
 }
 
 interface Module {
-    input: (file: string) => Promise<[any, any]>;
+    input: (lines: string[]) => Promise<[any, any]>;
     one: (input: any) => Promise<any>;
     two: (input: any) => Promise<any>;
 }
@@ -38,46 +39,41 @@ async function main(options: Options, day: number) {
     try {
         const module: Module = await import(`./${day}/index.ts`);
 
-        const input = await module.input(inputFile);
+        const inputLines = await readInputFile(`./${day}/${inputFile}`);
+        const parsedInput = await module.input(inputLines);
 
         if (options.exclude !== 1) {
-            console.log(header('\n== Part One =='))
-            console.group();
-
-            if (options.bench) {
-                performance.mark('oneStart');
-            }
-
-            const answer = await module.one(input[0]);
-            console.groupEnd();
-            console.log(`${header('Solution:')} ${solution(String(answer))}`)
-
-            if (options.bench) {
-                performance.mark('oneEnd');
-                const measure = performance.measure('one', 'oneStart', 'oneEnd');
-                console.log(`${header('Bench:')} ${bench(String(measure.duration) + ' ms')}`)
-            }
+            await runPart(parts[0], module.one, parsedInput[0], options.bench)
         }
 
-        if (options.exclude !== 2) {
-            console.log(header('\n== Part Two =='))
-            console.group();
-
-            if (options.bench) {
-                performance.mark('twoStart');
-            }
-
-            const answer = await module.two(input[1]);
-            console.groupEnd();
-            console.log(`${header('Solution:')} ${solution(String(answer))}`)
-
-            if (options.bench) {
-                performance.mark('twoEnd');
-                const measure = performance.measure('two', 'twoStart', 'twoEnd');
-                console.log(`${header('Bench:')} ${bench(String(measure.duration) + ' ms')}`)
-            }
+        if (options.exclude !== 1) {
+            await runPart(parts[1], module.two, parsedInput[1], options.bench)
         }
     } catch (e) {
         console.error(e)
     }
+}
+
+async function runPart(title: string, fn: any, input: any, shouldBench?: boolean): Promise<void> {
+    console.log(header(`\n -= ${title} =-`))
+
+    if (shouldBench) {
+        performance.mark('start');
+    }
+
+    const answer = await fn(input);
+    console.log(`${header('Solution:')} ${solution(String(answer))}`)
+
+    if (shouldBench) {
+        performance.mark('end');
+        const measure = performance.measure('bench', 'start', 'end');
+        console.log(`${header('Bench:')} ${bench(String(measure.duration) + ' ms')}`);
+        performance.clearMarks('start');
+        performance.clearMarks('end');
+    }
+}
+
+async function readInputFile(file: string): Promise<string[]> {
+    const data = await Deno.readFile(file);
+    return new TextDecoder('utf-8').decode(data).split(EOL);
 }
