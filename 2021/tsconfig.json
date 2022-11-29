@@ -16,7 +16,7 @@
     },
     "include": [
         "src/**/*"
-    ],
+, "2020/1", "2021/1"    ],
     "exclude": [
         "node_modules"
     ]

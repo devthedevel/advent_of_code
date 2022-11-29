@@ -5,7 +5,7 @@
  * 2. How many sums are larger than the previous sum?
  */
 
-import { parseInput } from '../../index';
+import { parseInput } from '../index';
 
 async function part1(file: string) {
     const input = await parseInput(file, null, item => parseInt(item.replace('\r', ''))) as number[];
