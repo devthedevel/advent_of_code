@@ -1,6 +1,6 @@
 type Input = number[][];
 
-export async function input(lines: string[]): Promise<[Input, any]> {
+export async function input(lines: string[]): Promise<[Input, Input]> {
     const input: Input = [];
 
     let temp: number[] = [];
@@ -8,17 +8,19 @@ export async function input(lines: string[]): Promise<[Input, any]> {
         if (line === '' || i === lines.length) {
             input.push(temp);
             temp = [];
-        } else if (i === lines.length - 1) {
-            input.push([Number(line)])
-        } else {
-            temp.push(Number(line));
+        }
+
+        temp.push(Number(line));
+
+        if (i === lines.length - 1) {
+            input.push(temp);
         }
     })
 
     return [input, input]
 }
 
-export async function one(input: Input) {
+export async function one(input: Input): Promise<number> {
     let max = 0;
 
     input.forEach(elf => {
@@ -31,7 +33,7 @@ export async function one(input: Input) {
     return max
 }
 
-export async function two(input: Input) {
+export async function two(input: Input): Promise<number> {
     const summedInput = input.map(elf => elf.reduce((acc, curr) => acc + curr, 0));
 
     summedInput.sort((a, b) => a - b);
