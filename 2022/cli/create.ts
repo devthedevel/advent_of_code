@@ -26,7 +26,7 @@ export async function create(_options: CreateCommandOptions, day: number) {
     }
 
     if (!await exists(modulePath)) {
-        await Deno.copyFile('./default-module.ts', modulePath);
+        await Deno.copyFile('./cli/default-module.ts', modulePath);
     }
 
     if (!await exists(inputPath)) {
