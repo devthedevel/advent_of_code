@@ -1,0 +1,6 @@
+{
+    "tasks": {
+        "create": "deno run --allow-read --allow-write index.ts create",
+        "run": "deno run --allow-read index.ts run"
+    }
+}
