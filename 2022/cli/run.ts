@@ -1,7 +1,7 @@
 import { header, solution, bench } from './colors.ts';
 import { EOL } from 'https://deno.land/std@0.166.0/node/os.ts';
 
-interface Options {
+interface RunCommandOptions {
     exclude: 1 | 2;
     bench: boolean;
     sample: boolean;
@@ -15,7 +15,7 @@ interface Module {
 
 type AocFunction = (input: any) => Promise<any>;
 
-export async function run(options: Options, day: number) {
+export async function run(options: RunCommandOptions, day: number) {
     const parts = ['Part One', 'Part Two'].filter((_, i) => i + 1 !== options.exclude);
     const inputFile = options.sample ? 'sample.txt' : 'input.txt';
 
