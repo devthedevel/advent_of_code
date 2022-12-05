@@ -1,4 +1,5 @@
-import { header, solution, bench } from './colors.ts';
+import { header, solution, bench } from '../colors.ts';
+import { join, resolve, toFileUrl } from '../../deps/path.ts';
 import { EOL } from 'https://deno.land/std@0.166.0/node/os.ts';
 
 interface RunCommandOptions {
@@ -19,14 +20,15 @@ export async function run(options: RunCommandOptions, day: number) {
     const parts = ['Part One', 'Part Two'].filter((_, i) => i + 1 !== options.exclude);
     const inputFile = options.sample ? 'sample.txt' : 'input.txt';
 
-    const modulePath = `./${day}/index.ts`;
-    const inputPath = `./${day}/${inputFile}`;
+    const root = join(Deno.cwd(), String(day));
+    const dynModulePath = toFileUrl(resolve(root, 'index.ts')).toString();
+    const inputPath = resolve(root, inputFile);
 
     console.log(`${header('Running Day:')} ${day} (${parts.join(' & ')})`);
-    console.log(`${header('Input File:')} ${inputFile}`)
+    console.log(`${header('Input File:')} ${inputPath}`)
 
     try {
-        const module: Module = await import(modulePath);
+        const module: Module = await import(dynModulePath);
 
         const inputLines = await readInputFile(inputPath);
         const parsedInput = await module.input(inputLines);
@@ -40,9 +42,9 @@ export async function run(options: RunCommandOptions, day: number) {
         }
     } catch (e) {
         if (e.code === 'ERR_MODULE_NOT_FOUND') {
-            console.error(`Unable to open module ${modulePath}`)
+            console.error(`Unable to open module ${dynModulePath}`)
         } else if (e instanceof Deno.errors.NotFound) {
-            console.error(`Unable to open input file ${inputFile}`)
+            console.error(`Unable to open input file ${inputPath}`)
         }
         Deno.exit(1);
     }
