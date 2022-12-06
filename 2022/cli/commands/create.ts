@@ -21,17 +21,17 @@ export async function create(_options: CreateCommandOptions, day: number) {
     const dynModulePath = resolve(root, 'index.ts');
     const inputPath = resolve(root, 'input.txt');
     const sampleInputPath = resolve(root, 'sample.txt');
-    const defaultModulePath = resolve(root, '../cli/default-module.ts');
+    const defaultModulePath = import.meta.resolve('../default-module.ts').replace('file:///', '');
 
     if (!await exists(root)) {
         await Deno.mkdir(root);
     }
 
-    await Promise.all([
+    await Promise.allSettled([
         createModuleFile(defaultModulePath, dynModulePath),
         createInputFile(inputPath),
         createInputFile(sampleInputPath)
-    ])
+    ]);
 
     console.log(header(`Created day ${_day}! To run day ${_day}, run the following command:\n`));
     console.log(`deno task run ${_day}\n`);
