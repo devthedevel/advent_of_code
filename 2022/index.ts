@@ -3,7 +3,7 @@ import { create, run } from './cli/commands/index.ts';
 
 if (import.meta.main) {
     await new Command()
-        .name("aoc")
+        .name("aogc")
         .version('0.1.0')
         .description('Command line tool to run 2022 Advent of Code scripts')
         .command('create', 'Create a new day')
