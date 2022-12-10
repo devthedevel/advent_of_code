@@ -30,8 +30,6 @@ export async function input(lines: string[]): Promise<[InstructionSet, Instructi
 }
 
 export async function one(input: InstructionSet): Promise<number> {
-
-    const cycleBreakpoints: number[] = [20, 60, 100, 140, 180, 220]
     const signalStrengths: number[] = [];
 
     let cycle = 1;
@@ -40,33 +38,35 @@ export async function one(input: InstructionSet): Promise<number> {
         X: 1
     };
 
-    let currInstr: Instruction | undefined | null = null;
-    let instStartCycle = 0;
+    let currInstruction: Instruction | undefined | null = null;
+    let currInstructionStartCycle = 0;
 
     while (true) {
-        if (!currInstr) {
-            currInstr = input.shift()
+        // Get new instruction if needed
+        if (!currInstruction) {
+            currInstruction = input.shift();
 
-            if (!currInstr) {
+            if (!currInstruction) {
                 break;
             }
 
-            instStartCycle = 0;
+            currInstructionStartCycle = 0;
         }
 
-        if (cycle === cycleBreakpoints[0]) {
+        // Record signal strength at 40 cycle intervals, starting at 20
+        if (cycle === (cycle - 20) % 40) {
             signalStrengths.push(registers.X * cycle);
-            cycleBreakpoints.shift()
         }
 
-        if (currInstr.type === 'noop') {
-            currInstr = null;
-        } else if (currInstr.type === 'addx') {
-            if (instStartCycle === 0) {
-                instStartCycle++;
+        // Process instruction
+        if (currInstruction.type === 'noop') {
+            currInstruction = null;
+        } else if (currInstruction.type === 'addx') {
+            if (currInstructionStartCycle === 0) {
+                currInstructionStartCycle++;
             } else {
-                registers.X += (currInstr! as AddX).value;
-                currInstr = null;
+                registers.X += (currInstruction! as AddX).value;
+                currInstruction = null;
             }
         }
 
@@ -77,50 +77,51 @@ export async function one(input: InstructionSet): Promise<number> {
 }
 
 export async function two(input: InstructionSet): Promise<number> {
-    const cycleBreakpoints: number[] = [40, 80, 120, 160, 200, 240]
-
     let cycle = 1;
 
     const registers: { [reg: string]: number } = {
         X: 1
     };
 
-    let currInstr: Instruction | undefined | null = null;
-    let instStartCycle = 0;
+    let currInstruction: Instruction | undefined | null = null;
+    let currInstructionStartCycle = 0;
 
     let crtRow = '';
 
     while (true) {
-        if (cycle === cycleBreakpoints[0] + 1) {
-            cycleBreakpoints.shift();
+        // Print CRT line at 40 cycle intervals
+        if (cycle === cycle % 40 + 1) {
             console.log(crtRow);
             crtRow = '';
         }
 
-        if (!currInstr) {
-            currInstr = input.shift()
+        // Get new instruction if needed
+        if (!currInstruction) {
+            currInstruction = input.shift();
 
-            if (!currInstr) {
+            if (!currInstruction) {
                 break;
             }
 
-            instStartCycle = 0;
+            currInstructionStartCycle = 0;
         }
 
+        // Add pixel to CRT
         if (Math.abs(registers.X - (cycle - 1) % 40) <= 1) {
-            crtRow = crtRow.concat('#')
+            crtRow = crtRow.concat('#');
         } else {
-            crtRow = crtRow.concat('.')
+            crtRow = crtRow.concat('.');
         }
 
-        if (currInstr.type === 'noop') {
-            currInstr = null;
-        } else if (currInstr.type === 'addx') {
-            if (instStartCycle === 0) {
-                instStartCycle++;
+        // Process instruction
+        if (currInstruction.type === 'noop') {
+            currInstruction = null;
+        } else if (currInstruction.type === 'addx') {
+            if (currInstructionStartCycle === 0) {
+                currInstructionStartCycle++;
             } else {
-                registers.X += (currInstr! as AddX).value;
-                currInstr = null;
+                registers.X += (currInstruction! as AddX).value;
+                currInstruction = null;
             }
         }
 
