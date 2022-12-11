@@ -59,7 +59,7 @@ export async function input(lines: string[]): Promise<[Monkeys, any]> {
     })
 
 
-    return [monkeys, null];
+    return [monkeys, monkeys];
 }
 
 export async function one(input: Monkeys): Promise<number> {
@@ -126,6 +126,64 @@ export async function one(input: Monkeys): Promise<number> {
         .reduce((acc, curr) => acc * curr, 1)
 }
 
-export async function two(input: any): Promise<number> {
-    throw new Error('Unimplemented');
+export async function two(input: Monkeys): Promise<number> {
+    const inspections: number[] = new Array(input.length).fill(0);
+    const numRounds = 10000;
+
+    for (let round = 0; round < numRounds; round++) {
+        for (let monkeyIdx = 0; monkeyIdx < input.length; monkeyIdx++) {
+            const monkey = input[monkeyIdx];
+
+            while (monkey.items.length > 0) {
+                const item = monkey.items.shift() as number;
+
+                inspections[monkeyIdx]++;
+
+                let arg1: number;
+                let arg2: number;
+                let worry: number;
+
+                if (monkey.operation.op === '*') {
+                    if (monkey.operation.arg1 === 'old') {
+                        arg1 = item;
+                    } else {
+                        arg1 = Number(monkey.operation.arg1);
+                    }
+
+                    if (monkey.operation.arg2 === 'old') {
+                        arg2 = item;
+                    } else {
+                        arg2 = Number(monkey.operation.arg2);
+                    }
+
+                    worry = arg1! * arg2!;
+                } else if (monkey.operation.op === '+') {
+                    if (monkey.operation.arg1 === 'old') {
+                        arg1 = item;
+                    } else {
+                        arg1 = Number(monkey.operation.arg1);
+                    }
+
+                    if (monkey.operation.arg2 === 'old') {
+                        arg2 = item;
+                    } else {
+                        arg2 = Number(monkey.operation.arg2);
+                    }
+
+                    worry = arg1! + arg2!;
+                }
+
+                if (worry! % monkey.test.condition === 0) {
+                    input[monkey.test.trueResult].items.push(worry!);
+                } else {
+                    input[monkey.test.falseResult].items.push(worry!);
+                }
+            }
+        }
+    }
+
+    return inspections
+        .sort((a, b) => b - a)
+        .slice(0, 2)
+        .reduce((acc, curr) => acc * curr, 1)
 }
