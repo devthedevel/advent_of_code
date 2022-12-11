@@ -30,8 +30,18 @@ export async function run(options: RunCommandOptions, day: number) {
     try {
         const module: Module = await import(dynModulePath);
 
+        if (options.bench) {
+            performance.mark('input');
+        }
+
         const inputLines = await readInputFile(inputPath);
         const parsedInput = await module.input(inputLines);
+
+        if (options.bench) {
+            performance.mark('inputEnd');
+            const measure = performance.measure('inputBench', 'input', 'inputEnd');
+            console.log(`${header('Input Bench: ')} ${bench(String(measure.duration) + ' ms')}`);
+        }
 
         if (options.exclude !== 1) {
             await runPart(parts[0], module.one, parsedInput[0], options.bench)
