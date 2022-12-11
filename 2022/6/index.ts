@@ -1,9 +1,9 @@
-export async function input(lines: string[]): Promise<[string, string]> {
+export function input(lines: string[]): [string, string] {
     const input = lines[0]
     return [input, input];
 }
 
-export async function one(input: string): Promise<number> {
+export function one(input: string): number {
     const offset = 4;
     let idx = 0;
 
@@ -19,7 +19,7 @@ export async function one(input: string): Promise<number> {
     return idx;
 }
 
-export async function two(input: string): Promise<number> {
+export function two(input: string): number {
     const offset = 14;
     let idx = 0;
 

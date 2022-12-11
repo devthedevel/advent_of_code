@@ -12,7 +12,7 @@ interface RpsMatch {
     foe: Rps;
 }
 
-export async function input(lines: string[]): Promise<[RpsMatch[], any]> {
+export function input(lines: string[]): [RpsMatch[], any] {
     const foeMapping = {
         A: Rps.Rock,
         B: Rps.Paper,
@@ -37,7 +37,7 @@ export async function input(lines: string[]): Promise<[RpsMatch[], any]> {
     return [matches, matches];
 }
 
-export async function one(input: RpsMatch[]): Promise<number> {
+export function one(input: RpsMatch[]): number {
     const scores = {
         Rock: 1,
         Paper: 2,
@@ -62,7 +62,7 @@ export async function one(input: RpsMatch[]): Promise<number> {
     return input.reduce((acc, curr) => acc + processRpsMatch(curr), 0);
 }
 
-export async function two(input: RpsMatch[]): Promise<number> {
+export function two(input: RpsMatch[]): number {
     const scores = {
         Rock: 1,
         Paper: 2,

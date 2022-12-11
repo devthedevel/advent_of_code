@@ -26,7 +26,7 @@ export class Node<T> {
     }
 }
 
-export async function input(lines: string[]): Promise<[Node<FsItem>, Node<FsItem>]> {
+export function input(lines: string[]): [Node<FsItem>, Node<FsItem>] {
     const root = new Node<FsItem>({
         type: 'dir',
         name: '/'
@@ -74,14 +74,14 @@ export async function input(lines: string[]): Promise<[Node<FsItem>, Node<FsItem
     return [root, root];
 }
 
-export async function one(input: Node<FsItem>): Promise<number> {
+export function one(input: Node<FsItem>): number {
     const limit = 100000;
     const dirSizeMap = getDirectorySizes(input);
 
     return Array.from(dirSizeMap.values()).filter(dirSize => dirSize <= limit).reduce((sum, dirSize) => sum + dirSize, 0);
 }
 
-export async function two(input: Node<FsItem>): Promise<number> {
+export function two(input: Node<FsItem>): number {
     const totalDiskSpace = 70000000;
     const requiredSpace = 30000000;
 

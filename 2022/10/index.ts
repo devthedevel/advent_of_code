@@ -10,7 +10,7 @@ interface AddX {
 type Instruction = Noop | AddX;
 type InstructionSet = Instruction[];
 
-export async function input(lines: string[]): Promise<[InstructionSet, InstructionSet]> {
+export function input(lines: string[]): [InstructionSet, InstructionSet] {
     const instructionSet = lines.map(line => {
         const [instr, arg] = line.split(' ');
 
@@ -29,7 +29,7 @@ export async function input(lines: string[]): Promise<[InstructionSet, Instructi
     return [[...instructionSet], [...instructionSet]]
 }
 
-export async function one(input: InstructionSet): Promise<number> {
+export function one(input: InstructionSet): number {
     const signalStrengths: number[] = [];
 
     let cycle = 1;
@@ -76,7 +76,7 @@ export async function one(input: InstructionSet): Promise<number> {
     return signalStrengths.reduce((acc, curr) => acc + curr, 0);
 }
 
-export async function two(input: InstructionSet): Promise<number> {
+export function two(input: InstructionSet): number {
     let cycle = 1;
 
     const registers: { [reg: string]: number } = {

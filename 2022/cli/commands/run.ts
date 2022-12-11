@@ -9,12 +9,12 @@ interface RunCommandOptions {
 }
 
 interface Module {
-    input: (lines: string[]) => Promise<[any, any]>;
+    input: (lines: string[]) => [any, any];
     one: AocFunction;
     two: AocFunction;
 }
 
-type AocFunction = (input: any) => Promise<any>;
+type AocFunction = (input: any) => any;
 
 export async function run(options: RunCommandOptions, day: number) {
     const parts = ['Part One', 'Part Two'].filter((_, i) => i + 1 !== options.exclude);
@@ -35,7 +35,7 @@ export async function run(options: RunCommandOptions, day: number) {
         }
 
         const inputLines = await readInputFile(inputPath);
-        const parsedInput = await module.input(inputLines);
+        const parsedInput = module.input(inputLines);
 
         if (options.bench) {
             performance.mark('inputEnd');
@@ -44,11 +44,11 @@ export async function run(options: RunCommandOptions, day: number) {
         }
 
         if (options.exclude !== 1) {
-            await runPart(parts[0], module.one, parsedInput[0], options.bench)
+            runPart(parts[0], module.one, parsedInput[0], options.bench)
         }
 
         if (options.exclude !== 1) {
-            await runPart(parts[1], module.two, parsedInput[1], options.bench)
+            runPart(parts[1], module.two, parsedInput[1], options.bench)
         }
     } catch (e) {
         if (e.code === 'ERR_MODULE_NOT_FOUND') {

@@ -13,13 +13,13 @@ function getPriority(char: string): number {
     return char.charCodeAt(0) - (isUppercase(char) ? UPPER_OFFSET : LOWER_OFFSET);
 }
 
-export async function input(lines: string[]): Promise<[ItemList[], ItemList[]]> {
+export function input(lines: string[]): [ItemList[], ItemList[]] {
     const items = lines.map(line => line.split(''));
 
     return [items, items];
 }
 
-export async function one(input: ItemList[]): Promise<number> {
+export function one(input: ItemList[]): number {
     return input.reduce((acc, curr) => {
         const firstCompartment = new Set([...curr.slice(0, curr.length / 2)]);
         const secondCompartment = new Set([...curr.slice(curr.length / 2)]);
@@ -38,7 +38,7 @@ export async function one(input: ItemList[]): Promise<number> {
     }, 0);
 }
 
-export async function two(input: ItemList[]): Promise<number> {
+export function two(input: ItemList[]): number {
     let sum = 0;
     let numIterations = input.length / 3;
 

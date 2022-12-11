@@ -14,7 +14,7 @@ interface Monkey {
 
 type Monkeys = Monkey[];
 
-export async function input(lines: string[]): Promise<[Monkeys, any]> {
+export function input(lines: string[]): [Monkeys, any] {
     const monkeys: Monkeys = [];
 
     let monkeyIdx = 0;
@@ -62,7 +62,7 @@ export async function input(lines: string[]): Promise<[Monkeys, any]> {
     return [monkeys, monkeys];
 }
 
-export async function one(input: Monkeys): Promise<number> {
+export function one(input: Monkeys): number {
     const monkeys = JSON.parse(JSON.stringify(input));
 
     const worryFunc = (worry: number): number => {
@@ -72,7 +72,7 @@ export async function one(input: Monkeys): Promise<number> {
     return simulate(monkeys, 20, worryFunc);
 }
 
-export async function two(input: Monkeys): Promise<number> {
+export function two(input: Monkeys): number {
     const monkeys: Monkeys = JSON.parse(JSON.stringify(input));
     const divisor = monkeys.reduce((a, b) => a * b.test.condition, 1);
 

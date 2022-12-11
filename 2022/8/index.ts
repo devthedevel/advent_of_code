@@ -6,13 +6,13 @@ interface Coord {
     col: number;
 }
 
-export async function input(lines: string[]): Promise<[Grid, Grid]> {
+export function input(lines: string[]): [Grid, Grid] {
     const grid = lines.map(line => line.split('').map(item => Number(item)));
 
     return [grid, grid];
 }
 
-export async function one(input: Grid): Promise<number> {
+export function one(input: Grid): number {
     // Outer ring is immediately visible
     let visible = (input[0].length * 2) + ((input.length - 2) * 2);
 
@@ -32,7 +32,7 @@ export async function one(input: Grid): Promise<number> {
     return visible;
 }
 
-export async function two(input: Grid): Promise<number> {
+export function two(input: Grid): number {
     let highestScenicScore = 0;
 
     const inner = getInnerTreeCoords(input);

@@ -13,7 +13,7 @@ interface Input {
     procedures: Procedure[];
 }
 
-export async function input(lines: string[]): Promise<[Input, Input]> {
+export function input(lines: string[]): [Input, Input] {
     const input: Input = {
         stacks: [],
         procedures: []
@@ -23,7 +23,7 @@ export async function input(lines: string[]): Promise<[Input, Input]> {
 
     // Parse stacks
     for (let lineIdx = lineStackIdx - 1; lineIdx >= 0; lineIdx--) {
-        let line = lines[lineIdx];
+        const line = lines[lineIdx];
 
         for (let i = 0; i < line.length; i += 4) {
             if (line.charAt(i) !== '[') {
@@ -65,7 +65,7 @@ export async function input(lines: string[]): Promise<[Input, Input]> {
     return [input, clone]
 }
 
-export async function one(input: Input): Promise<string> {
+export function one(input: Input): string {
     const result: string[] = [];
 
     input.procedures.forEach(proc => {
@@ -79,7 +79,7 @@ export async function one(input: Input): Promise<string> {
     return result.join('');
 }
 
-export async function two(input: Input): Promise<string> {
+export function two(input: Input): string {
     const result: string[] = [];
 
     input.procedures.forEach(proc => {

@@ -5,7 +5,7 @@ interface Assignment {
 
 type Pair = [Assignment, Assignment]
 
-export async function input(lines: string[]): Promise<[Pair[], any]> {
+export function input(lines: string[]): [Pair[], any] {
     const pairs = lines.map(line => {
         const assignments = line.split(',');
 
@@ -31,7 +31,7 @@ export async function input(lines: string[]): Promise<[Pair[], any]> {
 //  - - - - - - -
 //1 2 3 4 5 6 7 8 9
 //    - - - - -
-export async function one(input: Pair[]): Promise<number> {
+export function one(input: Pair[]): number {
     let count = 0;
 
     input.forEach(pair => {
@@ -49,7 +49,7 @@ export async function one(input: Pair[]): Promise<number> {
     return count;
 }
 
-export async function two(input: Pair[]): Promise<number> {
+export function two(input: Pair[]): number {
     let count = 0;
 
     input.forEach(pair => {

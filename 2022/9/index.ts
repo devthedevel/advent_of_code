@@ -15,7 +15,7 @@ interface Coord {
     y: number;
 }
 
-export async function input(lines: string[]): Promise<[Step[], any]> {
+export function input(lines: string[]): [Step[], any] {
     const steps = lines.map(line => {
         const args = line.split(' ');
         return {
@@ -27,11 +27,11 @@ export async function input(lines: string[]): Promise<[Step[], any]> {
     return [steps, steps];
 }
 
-export async function one(input: Step[]): Promise<number> {
+export function one(input: Step[]): number {
     return solve(input, 2)
 }
 
-export async function two(input: Step[]): Promise<number> {
+export function two(input: Step[]): number {
     return solve(input, 10)
 }
 

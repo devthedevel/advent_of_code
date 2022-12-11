@@ -1,11 +1,11 @@
-export async function input(lines: string[]): Promise<[any, any]> {
+export function input(lines: string[]): [any, any] {
     return [null, null];
 }
 
-export async function one(input: any): Promise<number> {
+export function one(input: any): number {
     throw new Error('Unimplemented');
 }
 
-export async function two(input: any): Promise<number> {
+export function two(input: any): number {
     throw new Error('Unimplemented');
 }
