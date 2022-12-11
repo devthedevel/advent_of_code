@@ -14,7 +14,7 @@ interface Monkey {
 
 type Monkeys = Monkey[];
 
-export function input(lines: string[]): [Monkeys, any] {
+export function input(lines: string[]): [Monkeys, Monkeys] {
     const monkeys: Monkeys = [];
 
     let monkeyIdx = 0;
