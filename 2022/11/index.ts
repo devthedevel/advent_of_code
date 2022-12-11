@@ -63,7 +63,7 @@ export async function input(lines: string[]): Promise<[Monkeys, any]> {
 }
 
 export async function one(input: Monkeys): Promise<number> {
-    const inspections: number[] = [101, 95, 7, 105];
+    const inspections: number[] = new Array(input.length).fill(0);
     const numRounds = 20;
 
     for (let round = 0; round < numRounds; round++) {
@@ -72,6 +72,8 @@ export async function one(input: Monkeys): Promise<number> {
 
             while (monkey.items.length > 0) {
                 const item = monkey.items.shift() as number;
+
+                inspections[monkeyIdx]++;
 
                 let arg1: number;
                 let arg2: number;
