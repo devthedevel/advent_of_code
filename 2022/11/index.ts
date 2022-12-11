@@ -63,76 +63,32 @@ export async function input(lines: string[]): Promise<[Monkeys, any]> {
 }
 
 export async function one(input: Monkeys): Promise<number> {
-    const inspections: number[] = new Array(input.length).fill(0);
-    const numRounds = 20;
+    const monkeys = JSON.parse(JSON.stringify(input));
 
-    for (let round = 0; round < numRounds; round++) {
-        for (let monkeyIdx = 0; monkeyIdx < input.length; monkeyIdx++) {
-            const monkey = input[monkeyIdx];
-
-            while (monkey.items.length > 0) {
-                const item = monkey.items.shift() as number;
-
-                inspections[monkeyIdx]++;
-
-                let arg1: number;
-                let arg2: number;
-                let worry: number;
-
-                if (monkey.operation.op === '*') {
-                    if (monkey.operation.arg1 === 'old') {
-                        arg1 = item;
-                    } else {
-                        arg1 = Number(monkey.operation.arg1);
-                    }
-
-                    if (monkey.operation.arg2 === 'old') {
-                        arg2 = item;
-                    } else {
-                        arg2 = Number(monkey.operation.arg2);
-                    }
-
-                    worry = arg1! * arg2!;
-                } else if (monkey.operation.op === '+') {
-                    if (monkey.operation.arg1 === 'old') {
-                        arg1 = item;
-                    } else {
-                        arg1 = Number(monkey.operation.arg1);
-                    }
-
-                    if (monkey.operation.arg2 === 'old') {
-                        arg2 = item;
-                    } else {
-                        arg2 = Number(monkey.operation.arg2);
-                    }
-
-                    worry = arg1! + arg2!;
-                }
-
-                worry = Math.floor(worry! / 3);
-
-                if (worry % monkey.test.condition === 0) {
-                    input[monkey.test.trueResult].items.push(worry);
-                } else {
-                    input[monkey.test.falseResult].items.push(worry);
-                }
-            }
-        }
+    const worryFunc = (worry: number): number => {
+        return Math.floor(worry / 3.0);
     }
 
-    return inspections
-        .sort((a, b) => b - a)
-        .slice(0, 2)
-        .reduce((acc, curr) => acc * curr, 1)
+    return simulate(monkeys, 20, worryFunc);
 }
 
 export async function two(input: Monkeys): Promise<number> {
-    const inspections: number[] = new Array(input.length).fill(0);
-    const numRounds = 10000;
+    const monkeys: Monkeys = JSON.parse(JSON.stringify(input));
+    const divisor = monkeys.reduce((a, b) => a * b.test.condition, 1);
 
-    for (let round = 0; round < numRounds; round++) {
-        for (let monkeyIdx = 0; monkeyIdx < input.length; monkeyIdx++) {
-            const monkey = input[monkeyIdx];
+    const worryFunc = (worry: number): number => {
+        return worry % divisor;
+    }
+
+    return simulate(monkeys, 10000, worryFunc);
+}
+
+function simulate(monkeys: Monkey[], rounds: number, worryFunc: (worry: number) => number): number {
+    const inspections: number[] = new Array(monkeys.length).fill(0);
+
+    for (let round = 0; round < rounds; round++) {
+        for (let monkeyIdx = 0; monkeyIdx < monkeys.length; monkeyIdx++) {
+            const monkey = monkeys[monkeyIdx];
 
             while (monkey.items.length > 0) {
                 const item = monkey.items.shift() as number;
@@ -173,10 +129,12 @@ export async function two(input: Monkeys): Promise<number> {
                     worry = arg1! + arg2!;
                 }
 
-                if (worry! % monkey.test.condition === 0) {
-                    input[monkey.test.trueResult].items.push(worry!);
+                worry = worryFunc(worry!);
+
+                if (worry % monkey.test.condition === 0) {
+                    monkeys[monkey.test.trueResult].items.push(worry!);
                 } else {
-                    input[monkey.test.falseResult].items.push(worry!);
+                    monkeys[monkey.test.falseResult].items.push(worry!);
                 }
             }
         }
