@@ -19,8 +19,8 @@ def partOne(data)
 end
 
 def partTwo(data)
-  allowedValues = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-  valueMap = {
+  allowedTokens = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+  tokenMap = {
     "one" => 1,
     "two" => 2,
     "three" => 3,
@@ -35,9 +35,9 @@ def partTwo(data)
   calibrationValues = data.map do |line|
     values = []
 
-    allowedValues.each do |value|
+    allowedTokens.each do |value|
       idx = line.index(value)
-      lastIndex = line.index(value, -1 - value.length)
+      lastIndex = line.rindex(value)
 
       values.push(
         {
@@ -51,11 +51,9 @@ def partTwo(data)
       )
     end
 
-    filtered = values.select { |value| value["index"] != nil}.uniq
-
     sorted = filtered
     .sort { |a, b| a["index"] <=> b["index"] }
-    .map { |i| valueMap[i["value"]] || i["value"].to_i }
+    .map { |i| tokenMap[i["value"]] || i["value"].to_i }
 
     "#{sorted.first}#{sorted.last}".to_i
   end
